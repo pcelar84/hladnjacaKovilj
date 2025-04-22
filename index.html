@@ -1,0 +1,330 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Izdavanje profesionalne hladnjače kapaciteta 250 tona u Kovilju, Zmaj Jove Jovanovića 41. Vrhunske usluge skladištenja za vaše poslovanje.">
+    <title>Hladnjača Kovilj - Izdavanje 250 tona</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+        .chatbot-container { display: none; position: fixed; bottom: 20px; right: 20px; width: 300px; background: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 1000; }
+        .chatbot-header { background: #1e3a8a; color: white; padding: 10px; border-radius: 8px 8px 0 0; }
+        .chatbot-body { max-height: 300px; overflow-y: auto; padding: 10px; }
+        .chatbot-input { width: 100%; padding: 10px; border: none; border-top: 1px solid #ddd; }
+        .message-bot { background: #e5e7eb; padding: 8px; margin: 5px 0; border-radius: 8px; }
+        .message-user { background: #1e3a8a; color: white; padding: 8px; margin: 5px 0; border-radius: 8px; text-align: right; }
+        .flatpickr-input { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl font-bold">Hladnjača Kovilj - Izdavanje</h1>
+            <p class="mt-2 text-lg">Kapacitet 250 tona, Zmaj Jove Jovanovića 41, Kovilj</p>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-white py-12">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2">
+                <h2 class="text-3xl font-bold text-gray-800">Vaš pouzdan partner za skladištenje</h2>
+                <p class="mt-4 text-gray-600">
+                    Naša hladnjača od 250 tona u Kovilju pruža vrhunsku uslugu skladištenja za prehrambene, poljoprivredne i druge proizvode koji zahtevaju kontrolisane uslove. Sa strateškom lokacijom i modernom tehnologijom, osiguravamo očuvanje kvaliteta vaše robe.
+                </p>
+                <a href="#contact" class="mt-6 inline-block bg-blue-900 text-white py-3 px-6 rounded-lg hover:bg-blue-800">Kontaktirajte nas</a>
+            </div>
+            <div class="md:w-1/2 mt-6 md:mt-0">
+                <img src="https://via.placeholder.com/600x400?text=Hladnjača+Kovilj" alt="Hladnjača Kovilj" class="w-full rounded-lg shadow-lg">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="bg-gray-100 py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Prednosti naše hladnjače</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-gray-800">Kapacitet 250 tona</h3>
+                    <p class="mt-2 text-gray-600">Prostrana hladnjača za skladištenje velikih količina robe uz optimalne uslove.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-gray-800">Energetska efikasnost</h3>
+                    <p class="mt-2 text-gray-600">Savremeni sistemi za hlađenje smanjuju potrošnju energije i troškove.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-gray-800">Fleksibilni ugovori</h3>
+                    <p class="mt-2 text-gray-600">Prilagođeni uslovi iznajmljivanja prema potrebama vašeg poslovanja.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-gray-800">Logistička podrška</h3>
+                    <p class="mt-2 text-gray-600">Stručni tim za upravljanje zalihama i organizaciju transporta.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-gray-800">24/7 nadzor</h3>
+                    <p class="mt-2 text-gray-600">Napredni sigurnosni sistemi i video nadzor za potpunu bezbednost robe.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-gray-800">Strateška lokacija</h3>
+                    <p class="mt-2 text-gray-600">Zmaj Jove Jovanovića 41, Kovilj - lako dostupna sa glavnih saobraćajnica.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="bg-white py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Cenovnik</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-gray-800">Mesečni najam</h3>
+                    <p class="mt-2 text-2xl font-bold text-blue-900">€10 po toni</p>
+                    <p class="mt-2 text-gray-600">Idealno za kratkoročne potrebe. Uključuje osnovnu logističku podršku i 24/7 nadzor.</p>
+                    <a href="#reservation" class="mt-4 inline-block bg-blue-900 text-white py-2 px-4 rounded-lg hover:bg-blue-800">Zakaži</a>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-gray-800">Tromesečni najam</h3>
+                    <p class="mt-2 text-2xl font-bold text-blue-900">€9 po toni</p>
+                    <p class="mt-2 text-gray-600">Ušteda od 10%. Uključuje napredno upravljanje zalihama i prioritetnu podršku.</p>
+                    <a href="#reservation" class="mt-4 inline-block bg-blue-900 text-white py-2 px-4 rounded-lg hover:bg-blue-800">Zakaži</a>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-gray-800">Godišnji najam</h3>
+                    <p class="mt-2 text-2xl font-bold text-blue-900">€8 po toni</p>
+                    <p class="mt-2 text-gray-600">Najisplativija opcija. Uključuje sve usluge i personalizovane logističke aranžmane.</p>
+                    <a href="#reservation" class="mt-4 inline-block bg-blue-900 text-white py-2 px-4 rounded-lg hover:bg-blue-800">Zakaži</a>
+                </div>
+            </div>
+            <div class="mt-8 text-center">
+                <p class="text-gray-600">*Cene ne uključuju PDV. Dodatne usluge (npr. transportna koordinacija) dostupne su po dogovoru.</p>
+                <a href="#contact" class="mt-4 inline-block text-blue-900 font-semibold hover:underline">Kontaktirajte nas za prilagođenu ponudu</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation Section -->
+    <section id="reservation" class="bg-gray-100 py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Rezervišite hladnjaču</h2>
+            <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md">
+                <div>
+                    <div class="mb-4">
+                        <label for="reservation-name" class="block text-gray-700 font-semibold">Ime i prezime</label>
+                        <input type="text" id="reservation-name" class="w-full p-3 border rounded-lg" placeholder="Unesite vaše ime">
+                    </div>
+                    <div class="mb-4">
+                        <label for="reservation-email" class="block text-gray-700 font-semibold">Email</label>
+                        <input type="email" id="reservation-email" class="w-full p-3 border rounded-lg" placeholder="Unesite vaš email">
+                    </div>
+                    <div class="mb-4">
+                        <label for="reservation-dates" class="block text-gray-700 font-semibold">Period rezervacije</label>
+                        <input type="text" id="reservation-dates" class="w-full p-3 border rounded-lg" placeholder="Izaberite datume">
+                    </div>
+                    <div class="mb-4">
+                        <label for="reservation-capacity" class="block text-gray-700 font-semibold">Kapacitet (tone)</label>
+                        <input type="number" id="reservation-capacity" class="w-full p-3 border rounded-lg" placeholder="Unesite potrebni kapacitet" min="1" max="250">
+                    </div>
+                    <button onclick="submitReservation()" class="w-full bg-blue-900 text-white py-3 rounded-lg hover:bg-blue-800">Pošalji rezervaciju</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Details Section -->
+    <section class="bg-white py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Detalji o hladnjači</h2>
+            <div class="prose max-w-3xl mx-auto text-gray-600">
+                <p>Naša hladnjača u Kovilju je dizajnirana da zadovolji najviše standarde skladištenja za prehrambenu industriju, poljoprivredu i druge sektore. Sa kapacitetom od 250 tona, nudimo dovoljno prostora za velike količine robe, uz savremene sisteme za hlađenje koji osiguravaju očuvanje kvaliteta.</p>
+                <ul class="list-disc ml-6">
+                    <li><strong>Adresa:</strong> Zmaj Jove Jovanovića 41, Kovilj</li>
+                    <li><strong>Kapacitet:</strong> 250 tona</li>
+                    <li><strong>Temperaturni opseg:</strong> -20°C do +5°C, sa preciznom regulacijom</li>
+                    <li><strong>Pristup:</strong> Laka dostupnost kamionima, blizina autoputa E-75</li>
+                    <li><strong>Bezbednost:</strong> 24/7 video nadzor, alarmni sistemi i osiguranje</li>
+                    <li><strong>Energetska efikasnost:</strong> Moderni rashladni sistemi smanjuju potrošnju energije</li>
+                    <li><strong>Logistička podrška:</strong> Upravljanje zalihama i koordinacija transporta</li>
+                    <li><strong>Fleksibilni ugovori:</strong> Kratkoročni i dugoročni aranžmani prilagođeni vašim potrebama</li>
+                    <li><strong>Podrška:</strong> Stručni tim dostupan za konsultacije i operativnu pomoć</li>
+                </ul>
+                <p>Naša hladnjača je idealna za kompanije koje žele pouzdano skladištenje uz minimalne operativne troškove. Kontaktirajte nas za više informacija o uslovima izdavanja, cenama i dostupnosti.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="bg-gray-100 py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Kontaktirajte nas</h2>
+            <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md">
+                <div>
+                    <div class="mb-4">
+                        <label for="name" class="block text-gray-700 font-semibold">Ime i prezime</label>
+                        <input type="text" id="name" class="w-full p-3 border rounded-lg" placeholder="Unesite vaše ime">
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-gray-700 font-semibold">Email</label>
+                        <input type="email" id="email" class="w-full p-3 border rounded-lg" placeholder="Unesite vaš email">
+                    </div>
+                    <div class="mb-4">
+                        <label for="message" class="block text-gray-700 font-semibold">Poruka</label>
+                        <textarea id="message" class="w-full p-3 border rounded-lg" rows="5" placeholder="Vaša poruka"></textarea>
+                    </div>
+                    <button onclick="submitForm()" class="w-full bg-blue-900 text-white py-3 rounded-lg hover:bg-blue-800">Pošalji</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header">
+            <h3 class="text-lg font-semibold">AI Chatbot</h3>
+            <button onclick="toggleChatbot()" class="float-right text-white">X</button>
+        </div>
+        <div class="chatbot-body" id="chatbot-body">
+            <div class="message-bot">Zdravo! Kako mogu da vam pomognem oko izdavanja hladnjače?</div>
+        </div>
+        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Unesite poruku..." onkeypress="if(event.key === 'Enter') sendMessage()">
+    </div>
+    <button onclick="toggleChatbot()" class="fixed bottom-4 right-4 bg-blue-900 text-white p-4 rounded-full shadow-lg hover:bg-blue-800">💬</button>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2025 Hladnjača Kovilj. Sva prava zadržana.</p>
+            <p class="mt-2">Zmaj Jove Jovanovića 41, Kovilj | Email: info@hladnjacakovilj.rs | Telefon: +381 123 456 789</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Flatpickr for reservation dates
+        flatpickr("#reservation-dates", {
+            mode: "range",
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            locale: {
+                firstDayOfWeek: 1 // Start week on Monday
+            }
+        });
+
+        function submitForm() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            if (name && email && message) {
+                alert('Poruka je poslata! Uskoro ćemo vam odgovoriti.');
+                document.getElementById('name').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('message').value = '';
+            } else {
+                alert('Molimo popunite sva polja.');
+            }
+        }
+
+        function submitReservation() {
+            const name = document.getElementById('reservation-name').value;
+            const email = document.getElementById('reservation-email').value;
+            const dates = document.getElementById('reservation-dates').value;
+            const capacity = document.getElementById('reservation-capacity').value;
+            if (name && email && dates && capacity) {
+                if (capacity > 250 || capacity < 1) {
+                    alert('Kapacitet mora biti između 1 i 250 tona.');
+                    return;
+                }
+                alert(`Rezervacija poslata!\nIme: ${name}\nEmail: ${email}\nPeriod: ${dates}\nKapacitet: ${capacity} tona`);
+                document.getElementById('reservation-name').value = '';
+                document.getElementById('reservation-email').value = '';
+                document.getElementById('reservation-dates').value = '';
+                document.getElementById('reservation-capacity').value = '';
+            } else {
+                alert('Molimo popunite sva polja.');
+            }
+        }
+
+        function toggleChatbot() {
+            const chatbot = document.getElementById('chatbot');
+            chatbot.style.display = chatbot.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatbot-input');
+            const body = document.getElementById('chatbot-body');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // User message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message-user';
+            userMessage.textContent = message;
+            body.appendChild(userMessage);
+
+            // Bot response
+            const botMessage = document.createElement('div');
+            botMessage.className = 'message-bot';
+            botMessage.textContent = getBotResponse(message);
+            body.appendChild(botMessage);
+
+            input.value = '';
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function getBotResponse(message) {
+            message = message.toLowerCase();
+            if (message.includes('kapacitet')) return 'Hladnjača ima kapacitet od 250 tona.';
+            if (message.includes('temperatura')) return 'Temperaturni opseg je od -20°C do +5°C.';
+            if (message.includes('adresa')) return 'Nalazimo se na adresi Zmaj Jove Jovanovića 41, Kovilj.';
+            if (message.includes('kontakt')) return 'Možete nas kontaktirati na info@hladnjacakovilj.rs ili +381 123 456 789.';
+            if (message.includes('ugovor')) return 'Nudimo fleksibilne ugovore, uključujući kratkoročne i dugoročne aranžmane.';
+            if (message.includes('bezbednost')) return 'Hladnjača je opremljena 24/7 video nadzorom i alarmnim sistemima.';
+            if (message.includes('cena') || message.includes('cenovnik')) return 'Cene su: €10/tona mesečno, €9/tona tromesečno, €8/tona godišnje. Kontaktirajte nas za detalje!';
+            if (message.includes('rezervacija')) return 'Možete rezervisati hladnjaču u sekciji "Rezervišite hladnjaču" na sajtu, izaberite datume i kapacitet.';
+            return 'Možete pitati o kapacitetu, temperaturi, adresi, kontaktu, ugovorima, bezbednosti, cenovniku ili rezervacijama!';
+        }
+    </script>
+</body>
+</html>
